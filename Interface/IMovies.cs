@@ -6,6 +6,7 @@ namespace Examen.Interface
 {
     public interface IMovies
     {
+        public Task<List<MovieEntity>> GetAllMovies();
         public Task<List<MovieEntity>> FiltrarPorGenTerror(string genero);
         public  Task<bool> InsertarPelicula(MovieDto movieDto);
         public Task<bool> EditarNombrePelicula(Guid movieId, string name);
@@ -29,6 +30,19 @@ namespace Examen.Interface
         {
             _context = context;
 
+        }
+
+        public async Task<List<MovieEntity>> GetAllMovies()
+        {
+            try
+            {
+                var response = await _context.MovieEntity.ToListAsync();
+                return response;
+            }
+            catch (Exception)
+            {
+                return new List<MovieEntity>();
+            }
         }
 
 

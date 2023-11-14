@@ -1,5 +1,6 @@
 ﻿using Examen.Dtos;
 using Examen.Models;
+using Microsoft.EntityFrameworkCore;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Examen.Interface
@@ -12,8 +13,8 @@ namespace Examen.Interface
         public Task<bool> EditarStartTimeBillboard(Guid billboardId, DateTime startTime);
         public Task<bool> EditarEndTimeBillboard(Guid billboardId, DateTime endTime);
         public Task<bool> EditarMovieIdBillboard(Guid billboardId, Guid movieIdR);
-
-
+        public Task<List<BillboardEntity>> GetAllBilboards();
+        public Task<bool> InactivarCartelerayReservas(Guid bilboardId);
 
     }
 
@@ -142,6 +143,54 @@ namespace Examen.Interface
                 return false;
             }
             return false;
+        }
+
+
+
+
+        public async Task<List<BillboardEntity>> GetAllBilboards()
+        {
+            var response = await _context.BillboardEntity.ToListAsync();
+            return response;
+        }
+
+       public async Task<bool> InactivarCartelerayReservas(Guid bilboardId)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var billboard = _context.BillboardEntity.FirstOrDefault(x => x.BillboardId == bilboardId);
+                    if (billboard == null)
+                    {
+                        throw new Exception("Reserva no encontrada");
+                    }
+
+
+                    // Deshabilitar la reserva y la butaca
+                    billboard.Estado = false;
+
+                    var res = await _context.BookingEntity.Where(x => x.BillboardId == bilboardId).ToListAsync();
+                    foreach (var item in res)
+                    {
+                        item.Estado = false;
+                        Console.WriteLine("Id cliente afectado: " + item.CustomerId);
+                    }
+
+                    // Guardar los cambios en la base de datos
+                    await _context.SaveChangesAsync();
+
+                    // Confirmar la transacción
+                    transaction.Commit();
+                    return true;
+                }
+                catch (Exception)
+                {
+                    // Algo salió mal, deshacer la transacción
+                    transaction.Rollback();
+                    throw; // Propagar la excepción para manejarla en un nivel superior si es necesario
+                }
+            }
         }
     }
 }

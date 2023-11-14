@@ -101,5 +101,38 @@ namespace Examen.Controllers
                 return BadRequest(new { ErrorMessage = "Error" });
             }
         }
+
+
+        [HttpGet]
+        [Route("Listar-Todas-Las-carteleras")]
+        public async Task<IActionResult> GetAllReservasUser()
+        {
+            try
+            {
+                var response = await _bilboardEntity.GetAllBilboards();
+                return Ok(response);
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { ErrorMessage = "Error" });
+            }
+        }
+
+
+
+        [HttpPut]
+        [Route("InactivarCartelerayReservas")]
+        public async Task<IActionResult> InactivarCartelerayReservas(Guid bilboardId)
+        {
+            try
+            {
+                var response = await _bilboardEntity.InactivarCartelerayReservas(bilboardId);
+                return Ok(response);
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { ErrorMessage = "Error" });
+            }
+        }
     }
 }

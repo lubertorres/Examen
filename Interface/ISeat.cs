@@ -10,7 +10,8 @@ namespace Examen.Interface
         public Task<List<SeatEntity>> FiltrarSeatsEstado(bool estado);
         public Task<bool> EditarEstadoButaca(int seatId, bool estado);
         public Task<bool> InsertarButaca(SeatDto seatDto);
-        public Task<List<SeatEntity>> ListarButacasDisponiblesPorSala();
+        public Task<List<SeatEntity>> ButacasDisponiblesSala();
+
 
 
 
@@ -89,19 +90,22 @@ namespace Examen.Interface
         }
 
 
-        //SinTer
-        public async Task<List<SeatEntity>> ListarButacasDisponiblesPorSala()
+
+
+        public async Task<List<SeatEntity>> ButacasDisponiblesSala()
         {
-            DateTime fechaActual = DateTime.Now.Date;
+            using (var context = new BaseEntityContext())
+            {
+                DateTime today = DateTime.Today;
 
-            var seatsByRoom = from billboard in _context.BillboardEntity
-                              join room in _context.RoomEntity on billboard.RoomId equals room.RoomId
-                              join seat in _context.SeatEntity on room.RoomId equals seat.RoomId
-                              where billboard.DateB == fechaActual
-                              select seat;
+                var availableSeats = await context.BillboardEntity
+                    .Where(b => b.DateB.Date == today)
+                    .SelectMany(b => b.Room.SeatEntity)
+                    .Where(s => s.Estado)
+                    .ToListAsync();
 
-            return await seatsByRoom.ToListAsync();
-
+                return availableSeats;
+            }
         }
     }
 }

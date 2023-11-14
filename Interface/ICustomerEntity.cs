@@ -1,10 +1,12 @@
 ﻿using Examen.Dtos;
 using Examen.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Examen.Interface
 {
     public interface ICustomerEntity
     {
+        public Task<List<CustomerEntity>> GetAllCustomers();
         public Task<bool> InsertarCustomer(CustomerEntityDto customerEntityDto);
         public Task<bool> EditarNombreCliente(Guid DocumentNumber, string nombre);
         public  Task<bool> EditarApellidoCliente(Guid DocumentNumber, string apellido);
@@ -26,6 +28,22 @@ namespace Examen.Interface
             _context = context;
 
         }
+
+
+        public async Task<List<CustomerEntity>> GetAllCustomers()
+        {
+            try
+            {
+                var response = await _context.CustomerEntity.ToListAsync();
+                return response;
+            }
+            catch (Exception)
+            {
+                return new List<CustomerEntity>();
+            }
+
+        }
+
 
 
         public async Task<bool> InsertarCustomer(CustomerEntityDto customerEntityDto)
@@ -54,6 +72,10 @@ namespace Examen.Interface
                 return false;
             }
         }
+
+
+
+
 
         public async Task<bool> EditarNombreCliente(Guid DocumentNumber, string nombre)
         {

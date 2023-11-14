@@ -21,6 +21,21 @@ namespace Examen.Controllers
         }
 
 
+        [HttpGet]
+        [Route("GetAllMovies")]
+        public async Task<IActionResult> GetAllMovies()
+        {
+            try
+            {
+                var response = await _movie.GetAllMovies();
+                return Ok(response);
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { ErrorMessage = "Error" });
+            }
+        }
+
 
         [HttpGet]
         [Route("Genero")]

@@ -77,18 +77,20 @@ namespace Examen.Controllers
 
 
 
-        //SinTerminar
+
+
+
         [HttpGet]
-        [Route("Filtrar-Butacas-disponibles-ocupadas-por-sala")]
-        public async Task<List<SeatEntity>> ListarButacasDisponiblesPorSala()
+        [Route("ButacasDisponiblesSala")]
+        public async Task<List<SeatEntity>> ButacasDisponiblesSala()
         {
-            var response = await _seat.ListarButacasDisponiblesPorSala();
+
+
+
+
+            var response = await _seat.ButacasDisponiblesSala();
             return response;
         }
-
-
-
-
 
     }
 

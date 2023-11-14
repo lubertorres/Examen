@@ -15,6 +15,26 @@ namespace Examen.Controllers
         }
 
 
+
+
+        [HttpGet]
+        [Route("GetAllCustomers")]
+        public async Task<IActionResult> GetAllCustomers()
+        {
+
+            try
+            {
+                var response = await _customerEntity.GetAllCustomers();
+                return Ok(response);
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { ErrorMessage = "Error" });
+            }
+
+        }
+
+
         [HttpPost]
         [Route("Insertar-Customer")]
         public async Task<IActionResult> InsertarCustomer(CustomerEntityDto customerEntityDto)
