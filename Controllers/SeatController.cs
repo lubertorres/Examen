@@ -77,7 +77,7 @@ namespace Examen.Controllers
 
 
 
-
+        //SinTerminar
         [HttpGet]
         [Route("Filtrar-Butacas-disponibles-ocupadas-por-sala")]
         public async Task<List<SeatEntity>> ListarButacasDisponiblesPorSala()

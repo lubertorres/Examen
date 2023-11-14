@@ -7,5 +7,7 @@
         public int SeatId { get; set; }
 
         public Guid BillboardId { get; set; }
+        public bool? Estado { get; set; }
+
     }
 }

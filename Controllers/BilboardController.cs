@@ -47,5 +47,59 @@ namespace Examen.Controllers
             //    return BadRequest(new { ErrorMessage = "Error" });
             //}
         }
+
+
+
+
+        [HttpPut]
+        [Route("EditarStartTimeBillboard")]
+        public async Task<IActionResult> EditarStartTimeBillboard(Guid movieId, DateTime starTime)
+        {
+
+            try
+            {
+                var response = await _bilboardEntity.EditarStartTimeBillboard(movieId, starTime);
+                return Ok(response);
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { ErrorMessage = "Error" });
+            }
+        }
+
+
+
+        [HttpPut]
+        [Route("EditarEndTimeBillboard")]
+        public async Task<IActionResult> EditarEndTimeBillboard(Guid movieId, DateTime endTime)
+        {
+
+            try
+            {
+                var response = await _bilboardEntity.EditarEndTimeBillboard(movieId, endTime);
+                return Ok(response);
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { ErrorMessage = "Error" });
+            }
+        }
+
+
+        [HttpPut]
+        [Route("EditarMovieIdBillboard")]
+        public async Task<IActionResult> EditarMovieIdBillboard(Guid billboardId, Guid movieIdR)
+        {
+
+            try
+            {
+                var response = await _bilboardEntity.EditarMovieIdBillboard(billboardId, movieIdR);
+                return Ok(response);
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { ErrorMessage = "Error" });
+            }
+        }
     }
 }

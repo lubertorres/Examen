@@ -15,6 +15,8 @@ public partial class BookingEntity
 
     public Guid BillboardId { get; set; }
 
+    public bool? Estado { get; set; }
+
     public virtual BillboardEntity Billboard { get; set; } = null!;
 
     public virtual CustomerEntity Customer { get; set; } = null!;

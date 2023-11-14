@@ -9,6 +9,11 @@ namespace Examen.Interface
         public Task<bool> EditarValidarCartelera(Guid bilboardId, bool estado, DateTime fecha);
         public Task<bool> InsertarBilboard(BillboardEntityDto billboardEntityDto);
 
+        public Task<bool> EditarStartTimeBillboard(Guid billboardId, DateTime startTime);
+        public Task<bool> EditarEndTimeBillboard(Guid billboardId, DateTime endTime);
+        public Task<bool> EditarMovieIdBillboard(Guid billboardId, Guid movieIdR);
+
+
 
     }
 
@@ -72,5 +77,71 @@ namespace Examen.Interface
             }
         }
 
+
+
+
+
+        public async Task<bool> EditarStartTimeBillboard(Guid billboardId, DateTime startTime )
+        {
+            try
+            {
+                var response = await _context.BillboardEntity.FindAsync(billboardId);
+
+                if (response != null)
+                {
+                    response.StartTime = startTime;
+                    _context.SaveChanges();
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return false;
+        }
+
+
+
+        public async Task<bool> EditarEndTimeBillboard(Guid billboardId, DateTime endTime)
+        {
+            try
+            {
+                var response = await _context.BillboardEntity.FindAsync(billboardId);
+
+                if (response != null)
+                {
+                    response.EndTime = endTime;
+                    _context.SaveChanges();
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return false;
+        }
+
+
+        public async Task<bool> EditarMovieIdBillboard(Guid billboardId, Guid movieIdR)
+        {
+            try
+            {
+                var response = await _context.BillboardEntity.FindAsync(billboardId);
+
+                if (response != null)
+                {
+                    response.MovieId = movieIdR;
+                    _context.SaveChanges();
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return false;
+        }
     }
 }

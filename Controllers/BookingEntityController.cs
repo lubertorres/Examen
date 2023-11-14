@@ -33,11 +33,11 @@ namespace Examen.Controllers
 
         [HttpGet]
         [Route("Listar-Reservas-Por-Terror-Y-Fecha")]
-        public async Task<IActionResult> ListarReservas(DateTime fechaInicio, DateTime fechaFin, string genero)
+        public async Task<IActionResult> ListarReservas(DateTime fechaInicio, DateTime fechaFin)
         {
             try
             {
-                var response = await _bookinEntity.ListarReservas(fechaInicio, fechaFin, genero);
+                var response = await _bookinEntity.ListarReservas(fechaInicio, fechaFin);
                 return Ok(response);
             }
             catch (Exception)

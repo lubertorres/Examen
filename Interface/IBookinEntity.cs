@@ -7,7 +7,7 @@ namespace Examen.Interface
     public interface IBookinEntity
     {
         public Task<bool> InsertarBooking(BookingEntityDto bookingEntityDto);
-        public Task<List<BookingEntity>> ListarReservas(DateTime fechaInicio, DateTime fechaFin, string genero);
+        public Task<List<BookingEntity>> ListarReservas(DateTime fechaInicio, DateTime fechaFin);
 
 
     }
@@ -37,7 +37,8 @@ namespace Examen.Interface
                     DateB = DateTime.Now,
                     CustomerId = bookingEntityDto.CustomerId,
                     SeatId = bookingEntityDto.SeatId,
-                    BillboardId = bookingEntityDto.BillboardId
+                    BillboardId = bookingEntityDto.BillboardId,
+                    Estado = bookingEntityDto.Estado
                 });
 
                 await _context.SaveChangesAsync();
@@ -52,7 +53,7 @@ namespace Examen.Interface
 
 
 
-        public async Task<List<BookingEntity>> ListarReservas(DateTime fechaInicio, DateTime fechaFin, string genero)
+        public async Task<List<BookingEntity>> ListarReservas(DateTime fechaInicio, DateTime fechaFin)
         {
             try
             {
@@ -61,7 +62,7 @@ namespace Examen.Interface
                     var reservas = from reserva in context.BookingEntity
                                    join cartelera in context.BillboardEntity on reserva.BillboardId equals cartelera.BillboardId
                                    join pelicula in context.MovieEntity on cartelera.MovieId equals pelicula.MovieId
-                                   where pelicula.Genero == genero &&
+                                   where pelicula.Genero == "Terror" &&
                                          reserva.DateB >= fechaInicio && reserva.DateB <= fechaFin
                                    select reserva;
 

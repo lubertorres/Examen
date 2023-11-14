@@ -89,7 +89,7 @@ namespace Examen.Interface
         }
 
 
-
+        //SinTer
         public async Task<List<SeatEntity>> ListarButacasDisponiblesPorSala()
         {
             DateTime fechaActual = DateTime.Now.Date;
@@ -99,8 +99,6 @@ namespace Examen.Interface
                               join seat in _context.SeatEntity on room.RoomId equals seat.RoomId
                               where billboard.DateB == fechaActual
                               select seat;
-
-            // Aquí puedes realizar operaciones adicionales si es necesario.
 
             return await seatsByRoom.ToListAsync();
 
