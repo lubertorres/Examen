@@ -9,12 +9,9 @@ namespace Examen.Interface
     public interface IRoomEntity
     {
         public Task<bool> InsertarRoom(RoomEntityDto roomEntityDto);
-
-        public Task<bool> EditarNombreSala(Guid roomId, string nombre);
-
-        public Task<bool> EditarNumeroSala(Guid roomId, int numero);
-
         public Task<List<RoomEntity>> GetAllRoom();
+        public Task<bool> EditGlobalRoom(EditGlobalRoomDto editGlobalRoomDto);
+
 
 
 
@@ -67,35 +64,19 @@ namespace Examen.Interface
             }
         }
 
-        public async Task<bool> EditarNombreSala(Guid roomId, string nombre)
+
+
+
+        public async Task<bool> EditGlobalRoom(EditGlobalRoomDto editGlobalRoomDto)
         {
             try
             {
-                var response = await _context.RoomEntity.FindAsync(roomId);
+                var response = await _context.RoomEntity.FindAsync(editGlobalRoomDto.RoomId);
 
                 if (response != null)
                 {
-                    response.Name = nombre;
-                    _context.SaveChanges();
-                    return true;
-                }
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            return false;
-        }
-
-        public async Task<bool> EditarNumeroSala(Guid roomId, int numero)
-        {
-            try
-            {
-                var response = await _context.RoomEntity.FindAsync(roomId);
-
-                if (response != null)
-                {
-                    response.Number = numero;
+                    response.Name = editGlobalRoomDto.Name;
+                    response.Number = editGlobalRoomDto.Number;
                     _context.SaveChanges();
                     return true;
                 }

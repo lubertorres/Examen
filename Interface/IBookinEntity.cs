@@ -10,12 +10,7 @@ namespace Examen.Interface
         public Task<List<BookingEntityGetDto>> ListarReservasTerror(DateTime fechaInicio, DateTime fechaFin, string genero);
         public Task<List<BookingEntityGetDto>> GetAllReservasUser(Guid customerId);
         public Task<bool> InactivarReservaYButaca(Guid bookingId, int seatId);
-
-        public Task<bool> EditarIdCliente(Guid bookingId, Guid DocumentNumber);
-        public Task<bool> EditarSeatId(Guid bookingId, int seatId);
-
-
-
+        public Task<bool> EditGlobalBooking(EditBookingDto editBookingDto);
 
 
     }
@@ -170,37 +165,19 @@ namespace Examen.Interface
 
 
 
-        public async Task<bool> EditarIdCliente(Guid bookingId, Guid DocumentNumber)
+
+        public async Task<bool> EditGlobalBooking(EditBookingDto editBookingDto)
         {
             try
             {
-                var response = await _context.BookingEntity.FindAsync(bookingId);
+                var response = await _context.BookingEntity.FindAsync(editBookingDto.BookingId);
 
                 if (response != null)
                 {
-                    response.CustomerId = DocumentNumber;
-                    _context.SaveChanges();
-                    return true;
-                }
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            return false;
-        }
-
-
-
-        public async Task<bool> EditarSeatId(Guid bookingId, int seatId)
-        {
-            try
-            {
-                var response = await _context.BookingEntity.FindAsync(bookingId);
-
-                if (response != null)
-                {
-                    response.SeatId = seatId;
+                    response.CustomerId = editBookingDto.CustomerId;
+                    response.SeatId = editBookingDto.SeatId;
+                    response.BillboardId = editBookingDto.BillboardId;
+                    response.Estado = editBookingDto.Estado;
                     _context.SaveChanges();
                     return true;
                 }

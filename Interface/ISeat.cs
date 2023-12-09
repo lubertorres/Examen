@@ -11,8 +11,7 @@ namespace Examen.Interface
         public Task<bool> EditarEstadoButaca(int seatId, bool estado);
         public Task<bool> InsertarButaca(SeatDto seatDto);
         public Task<string> ButacasDisponiblesSala(Guid roomId);
-
-
+        public Task<bool> EditGlobalSeat(EditGlobalSeatDto editGlobalSeatDto);
 
 
     }
@@ -151,6 +150,32 @@ namespace Examen.Interface
             }
         }
 
+
+
+
+        public async Task<bool> EditGlobalSeat(EditGlobalSeatDto editGlobalSeatDto)
+        {
+            try
+            {
+
+                var response = await _context.SeatEntity.FindAsync(editGlobalSeatDto);
+
+                if (response != null)
+                {
+                    response.RowNumber = editGlobalSeatDto.RowNumber;
+                    response.RoomId = editGlobalSeatDto.RoomId;
+                    response.Estado = editGlobalSeatDto.Estado;
+                    _context.SaveChanges();
+                }
+                return true;
+
+            }
+            catch (Exception)
+            {
+                return false;
+
+            }
+        }
 
     }
 }

@@ -52,14 +52,15 @@ namespace Examen.Controllers
             }
         }
 
-        [HttpPut]
-        [Route("EditarNombreSala")]
-        public async Task<IActionResult> EditarNombreSala(Guid roomId, string nombre)
+
+
+        [HttpPut("EditGlobalRoom")]
+        public async Task<IActionResult> EditGlobalRoom(EditGlobalRoomDto editGlobalRoomDto)
         {
 
             try
             {
-                var response = await _roomEntity.EditarNombreSala(roomId, nombre);
+                var response = await _roomEntity.EditGlobalRoom(editGlobalRoomDto);
                 return Ok(response);
             }
             catch (Exception)
@@ -67,23 +68,5 @@ namespace Examen.Controllers
                 return BadRequest(new { ErrorMessage = "Error" });
             }
         }
-
-
-        [HttpPut]
-        [Route("EditarNumeroSala")]
-        public async Task<IActionResult> EditarNumeroSala(Guid roomId, int numero)
-        {
-
-            try
-            {
-                var response = await _roomEntity.EditarNumeroSala(roomId, numero);
-                return Ok(response);
-            }
-            catch (Exception)
-            {
-                return BadRequest(new { ErrorMessage = "Error" });
-            }
-        }
-
     }
 }

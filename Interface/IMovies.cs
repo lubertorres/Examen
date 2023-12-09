@@ -9,13 +9,7 @@ namespace Examen.Interface
         public Task<List<MovieGetDto>> GetAllMovies();
         public Task<List<MovieGetDto>> FiltrarPorGenTerror(string genero);
         public  Task<bool> InsertarPelicula(MovieDto movieDto);
-        public Task<bool> EditarNombrePelicula(Guid movieId, string name);
-        public Task<bool> EditarGeneroPelicula(Guid MovieId, string genero);
-        public Task<bool> EditarEdadMinimaPelicula(Guid MovieId, int permi);
-        public Task<bool> EditarDuracionPelicula(Guid MovieId, int duracion);
-
-
-
+        public Task<bool> EditGlobalMovie(EditMovieDto editMoveDto);
 
 
 
@@ -112,7 +106,7 @@ namespace Examen.Interface
                     AllowedAge = movieDto.AllowedAge,
                     LengthMinutes = movieDto.LengthMinutes,
                     DateB = DateTime.Now,
-                
+
                 });
                 await _context.SaveChangesAsync();
                 return true;
@@ -123,86 +117,28 @@ namespace Examen.Interface
             }
         }
 
-        public async Task<bool> EditarNombrePelicula(Guid MovieId, string name)
+
+
+
+        public async Task<bool> EditGlobalMovie(EditMovieDto editMovieDto)
         {
             try
             {
-                var response = await _context.MovieEntity.FindAsync(MovieId);
-
+                var response = await _context.MovieEntity.Where(x => x.MovieId == editMovieDto.Id).FirstOrDefaultAsync();
                 if (response != null)
                 {
-                    response.Name = name;
-                    _context.SaveChanges();
-                    return true;
+                    response.Name = editMovieDto.Name;
+                    response.Genero = editMovieDto.Genero;
+                    response.AllowedAge = editMovieDto.AllowedAge;
+                    response.LengthMinutes = editMovieDto.LengthMinutes;
+                    await _context.SaveChangesAsync();
                 }
-            }
-            catch (Exception)
+                return true;
+            }catch (Exception)
             {
                 return false;
             }
-            return false;
-        }
 
-
-        public async Task<bool> EditarGeneroPelicula(Guid MovieId, string genero)
-        {
-            try
-            {
-                var response = await _context.MovieEntity.FindAsync(MovieId);
-
-                if (response != null)
-                {
-                    response.Genero = genero;
-                    _context.SaveChanges();
-                    return true;
-                }
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            return false;
-        }
-
-        public async Task<bool> EditarEdadMinimaPelicula(Guid MovieId, int permi)
-        {
-            try
-            {
-                var response = await _context.MovieEntity.FindAsync(MovieId);
-
-                if (response != null)
-                {
-                    response.AllowedAge = permi;
-                    _context.SaveChanges();
-                    return true;
-                }
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            return false;
-        }
-
-
-        public async Task<bool> EditarDuracionPelicula(Guid MovieId, int duracion)
-        {
-            try
-            {
-                var response = await _context.MovieEntity.FindAsync(MovieId);
-
-                if (response != null)
-                {
-                    response.LengthMinutes = duracion;
-                    _context.SaveChanges();
-                    return true;
-                }
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            return false;
         }
     }
 }

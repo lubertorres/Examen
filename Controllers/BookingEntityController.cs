@@ -11,7 +11,7 @@ namespace Examen.Controllers
         private IBookinEntity _bookinEntity;
         public BookingEntityController(IBookinEntity bookingEntity)
         {
-            _bookinEntity = bookingEntity;
+            _bookinEntity = bookingEntity;  
         }
 
 
@@ -83,19 +83,13 @@ namespace Examen.Controllers
 
 
 
-
-
-
-
-
-        [HttpPut]
-        [Route("EditarIdCliente")]
-        public async Task<IActionResult> EditarIdCliente(Guid bookingId, Guid DocumentNumber)
+        [HttpPut("EditGlobalBooking")]
+        public async Task<IActionResult> EditGlobalBooking(EditBookingDto editBookingDto)
         {
 
             try
             {
-                var response = await _bookinEntity.EditarIdCliente(bookingId, DocumentNumber);
+                var response = await _bookinEntity.EditGlobalBooking(editBookingDto);
                 return Ok(response);
             }
             catch (Exception)
@@ -104,21 +98,5 @@ namespace Examen.Controllers
             }
         }
 
-
-        [HttpPut]
-        [Route("EditarSeatId")]
-        public async Task<IActionResult> EditarSeatId(Guid bookingId, int seatId)
-        {
-
-            try
-            {
-                var response = await _bookinEntity.EditarSeatId(bookingId, seatId);
-                return Ok(response);
-            }
-            catch (Exception)
-            {
-                return BadRequest(new { ErrorMessage = "Error" });
-            }
-        }
     }
 }

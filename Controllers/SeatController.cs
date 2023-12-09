@@ -88,6 +88,26 @@ namespace Examen.Controllers
             return Ok(response);
         }
 
+
+
+
+        [HttpPut("EditGlobalSeat")]
+        public async Task<IActionResult> EditGlobalSeat(EditGlobalSeatDto editGlobalSeatDto)
+        {
+
+            try
+            {
+                var response = await _seat.EditGlobalSeat(editGlobalSeatDto);
+                return Ok(response);
+
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { ErrorMessage = "Error" });
+            }
+
+        }
+
     }
 
 

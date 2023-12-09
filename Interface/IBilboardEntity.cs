@@ -9,14 +9,11 @@ namespace Examen.Interface
     {
         public Task<bool> EditarValidarCartelera(Guid bilboardId);
         public Task<bool> InsertarBilboard(BillboardEntityDto billboardEntityDto);
-
-        public Task<bool> EditarStartTimeBillboard(Guid billboardId, DateTime startTime);
-        public Task<bool> EditarEndTimeBillboard(Guid billboardId, DateTime endTime);
-        public Task<bool> EditarMovieIdBillboard(Guid billboardId, Guid movieIdR);
         public Task<List<BilboardEntityGetAll>> GetAllBilboards();
         public Task<List<BilboardEntityGetAll>> GetBilboardById(Guid bilboardId);
-
         public Task<bool> InactivarCartelerayReservas(Guid bilboardId);
+        public Task<bool> EditGlobalBillboard(EditBillboardDto editBillboardDto);
+
 
     }
 
@@ -85,58 +82,20 @@ namespace Examen.Interface
 
 
 
-        public async Task<bool> EditarStartTimeBillboard(Guid billboardId, DateTime startTime)
+
+        public async Task<bool> EditGlobalBillboard(EditBillboardDto editBillboardDto)
         {
             try
             {
-                var response = await _context.BillboardEntity.FindAsync(billboardId);
+                var response = await _context.BillboardEntity.FindAsync(editBillboardDto.BillboardId);
 
                 if (response != null)
                 {
-                    response.StartTime = startTime;
-                    _context.SaveChanges();
-                    return true;
-                }
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            return false;
-        }
-
-
-
-        public async Task<bool> EditarEndTimeBillboard(Guid billboardId, DateTime endTime)
-        {
-            try
-            {
-                var response = await _context.BillboardEntity.FindAsync(billboardId);
-
-                if (response != null)
-                {
-                    response.EndTime = endTime;
-                    _context.SaveChanges();
-                    return true;
-                }
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            return false;
-        }
-
-
-        public async Task<bool> EditarMovieIdBillboard(Guid billboardId, Guid movieIdR)
-        {
-            try
-            {
-                var response = await _context.BillboardEntity.FindAsync(billboardId);
-
-                if (response != null)
-                {
-                    response.MovieId = movieIdR;
+                    response.StartTime = editBillboardDto.StartTime;
+                    response.EndTime = editBillboardDto.EndTime;
+                    response.MovieId = editBillboardDto.MovieId;
+                    response.RoomId = editBillboardDto.RoomId;
+                    response.Estado =  editBillboardDto.Estado;
                     _context.SaveChanges();
                     return true;
                 }
