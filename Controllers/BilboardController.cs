@@ -19,11 +19,11 @@ namespace Examen.Controllers
 
         [HttpPut]
         [Route("inactivar-cartelera")]
-        public async Task<IActionResult> EditarValidarCartelera( Guid bilboardId, bool estado, DateTime fecha)
+        public async Task<IActionResult> EditarValidarCartelera( Guid bilboardId)
         {
             try
             {
-                var response = await _bilboardEntity.EditarValidarCartelera(bilboardId, estado, fecha);
+                var response = await _bilboardEntity.EditarValidarCartelera(bilboardId);
                 return Ok(response);
             }
             catch (Exception)
@@ -105,16 +105,43 @@ namespace Examen.Controllers
 
         [HttpGet]
         [Route("Listar-Todas-Las-carteleras")]
-        public async Task<IActionResult> GetAllReservasUser()
+        public async Task<IActionResult> GetAllBilboards()
         {
             try
             {
                 var response = await _bilboardEntity.GetAllBilboards();
                 return Ok(response);
+                if (response.Count >= 1)
+                {
+                    return Ok(response);
+
+                }
+                throw new Exception("No hay resultados");
             }
             catch (Exception)
             {
-                return BadRequest(new { ErrorMessage = "Error" });
+                throw new Exception("No hay resultados");
+            }
+        }
+
+
+        [HttpGet]
+        [Route("Listar-Carteleras-Por-Id")]
+        public async Task<IActionResult> GetBilboardById(Guid bilboardId)
+        {
+            try
+            {
+                var response = await _bilboardEntity.GetBilboardById(bilboardId);
+                return Ok(response);
+                if (response.Count >= 1)
+                {
+                    return Ok(response);
+                }
+                throw new Exception("No hay resultados");
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { ErrorMessage = "No hay resultados" });
             }
         }
 

@@ -20,6 +20,4 @@ public partial class CustomerEntity
     public bool Estado { get; set; }
 
     public DateTime DateC { get; set; }
-
-    public virtual ICollection<BookingEntity> BookingEntity { get; set; } = new List<BookingEntity>();
 }

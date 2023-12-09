@@ -82,14 +82,10 @@ namespace Examen.Controllers
 
         [HttpGet]
         [Route("ButacasDisponiblesSala")]
-        public async Task<List<SeatEntity>> ButacasDisponiblesSala()
+        public async Task<IActionResult> ButacasDisponiblesYOcupadasSala(Guid roomId)
         {
-
-
-
-
-            var response = await _seat.ButacasDisponiblesSala();
-            return response;
+            var response = await _seat.ButacasDisponiblesSala(roomId);
+            return Ok(response);
         }
 
     }

@@ -19,7 +19,5 @@ public partial class BookingEntity
 
     public virtual BillboardEntity Billboard { get; set; } = null!;
 
-    public virtual CustomerEntity Customer { get; set; } = null!;
-
     public virtual SeatEntity Seat { get; set; } = null!;
 }

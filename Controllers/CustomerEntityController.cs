@@ -25,14 +25,40 @@ namespace Examen.Controllers
             try
             {
                 var response = await _customerEntity.GetAllCustomers();
-                return Ok(response);
+                if (response.Count >= 1)
+                {
+                    return Ok(response);
+
+                }
+                throw new Exception("No hay resultados");
             }
             catch (Exception)
             {
-                return BadRequest(new { ErrorMessage = "Error" });
+                return BadRequest(new { ErrorMessage = "No hay resultados" });
             }
 
         }
+
+        [HttpGet]
+        [Route("GetCustomerById")]
+        public async Task<IActionResult> GetCustomerById(Guid customerId)
+        {
+            try
+            {
+                var response = await _customerEntity.GetCustomerById(customerId);
+                if (response.Count >= 1)
+                {
+                return Ok(response);
+
+                }
+                throw new Exception("No hay resultados");
+            }
+            catch (Exception)
+            {
+                return BadRequest(new { Exception = "No hay resultados" });
+            }
+        }
+
 
 
         [HttpPost]

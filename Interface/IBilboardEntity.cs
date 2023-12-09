@@ -7,13 +7,15 @@ namespace Examen.Interface
 {
     public interface IBilboardEntity
     {
-        public Task<bool> EditarValidarCartelera(Guid bilboardId, bool estado, DateTime fecha);
+        public Task<bool> EditarValidarCartelera(Guid bilboardId);
         public Task<bool> InsertarBilboard(BillboardEntityDto billboardEntityDto);
 
         public Task<bool> EditarStartTimeBillboard(Guid billboardId, DateTime startTime);
         public Task<bool> EditarEndTimeBillboard(Guid billboardId, DateTime endTime);
         public Task<bool> EditarMovieIdBillboard(Guid billboardId, Guid movieIdR);
-        public Task<List<BillboardEntity>> GetAllBilboards();
+        public Task<List<BilboardEntityGetAll>> GetAllBilboards();
+        public Task<List<BilboardEntityGetAll>> GetBilboardById(Guid bilboardId);
+
         public Task<bool> InactivarCartelerayReservas(Guid bilboardId);
 
     }
@@ -29,26 +31,27 @@ namespace Examen.Interface
 
         }
 
-        public async Task<bool> EditarValidarCartelera(Guid bilboardId, bool estado, DateTime fecha)
+        public async Task<bool> EditarValidarCartelera(Guid bilboardId)
         {
 
             try
             {
-
+                var fechaHoy = DateTime.Now;
                 var response = await _context.BillboardEntity.FindAsync(bilboardId);
 
-                if (response != null && response.EndTime < fecha)
+                if (response != null && response.StartTime < fechaHoy)
                 {
-                    response.Estado = estado;
+                    response.Estado = false;
                     _context.SaveChanges();
+                    return true;
+
                 }
-                return true;
+                return false;
 
             }
             catch (Exception)
             {
-                return false;
-
+                throw;
             }
         }
 
@@ -82,7 +85,7 @@ namespace Examen.Interface
 
 
 
-        public async Task<bool> EditarStartTimeBillboard(Guid billboardId, DateTime startTime )
+        public async Task<bool> EditarStartTimeBillboard(Guid billboardId, DateTime startTime)
         {
             try
             {
@@ -148,13 +151,73 @@ namespace Examen.Interface
 
 
 
-        public async Task<List<BillboardEntity>> GetAllBilboards()
+        public async Task<List<BilboardEntityGetAll>> GetAllBilboards()
         {
-            var response = await _context.BillboardEntity.ToListAsync();
-            return response;
+            try
+            {
+                var billboards = _context.BillboardEntity;
+
+                var bilboardInfoList = await billboards.Select(billboard => new BilboardEntityGetAll
+                {
+                    BillboardId = billboard.BillboardId,
+                    DateB = billboard.DateB,
+                    StartTime = billboard.StartTime,
+                    EndTime = billboard.EndTime,
+                    MovieId = billboard.MovieId,
+                    RoomId = billboard.RoomId,
+                    Estado = billboard.Estado
+
+                }).ToListAsync();
+
+                if (bilboardInfoList.Count >= 1)
+                {
+                    return bilboardInfoList;
+                }
+                throw new Exception("No hay resultados");
+            }
+            catch (Exception)
+            {
+                throw new Exception("No hay resultados");
+            }
+
         }
 
-       public async Task<bool> InactivarCartelerayReservas(Guid bilboardId)
+
+        public async Task<List<BilboardEntityGetAll>> GetBilboardById(Guid billboardId)
+        {
+            try
+            {
+                var billboards = _context.BillboardEntity;
+
+                var bilboardInfoList = await billboards
+                    .Where(billboard => billboard.BillboardId == billboardId)
+                    .Select(billboard => new BilboardEntityGetAll
+                    {
+                        BillboardId = billboard.BillboardId,
+                        DateB = billboard.DateB,
+                        StartTime = billboard.StartTime,
+                        EndTime = billboard.EndTime,
+                        MovieId = billboard.MovieId,
+                        RoomId = billboard.RoomId,
+                        Estado = billboard.Estado
+
+                    }).ToListAsync();
+                if (bilboardInfoList.Count >= 1)
+                {
+                    return bilboardInfoList;
+                }
+                throw new Exception("No hay resultados");
+
+            }
+            catch (Exception)
+            {
+                throw new Exception("No hay resultados");
+            }
+
+
+        }
+
+        public async Task<bool> InactivarCartelerayReservas(Guid bilboardId)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -171,6 +234,8 @@ namespace Examen.Interface
                     billboard.Estado = false;
 
                     var res = await _context.BookingEntity.Where(x => x.BillboardId == bilboardId).ToListAsync();
+                    Console.WriteLine("Id cliente afectado: ");
+
                     foreach (var item in res)
                     {
                         item.Estado = false;

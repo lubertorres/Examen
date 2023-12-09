@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\LEGION\\Downloads\\Examen\\Examen.csproj": {}
+    "C:\\Users\\LEGION\\Downloads\\ExamenArchivoFinal\\Examen\\Examen.csproj": {}
   },
   "projects": {
-    "C:\\Users\\LEGION\\Downloads\\Examen\\Examen.csproj": {
+    "C:\\Users\\LEGION\\Downloads\\ExamenArchivoFinal\\Examen\\Examen.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\LEGION\\Downloads\\Examen\\Examen.csproj",
+        "projectUniqueName": "C:\\Users\\LEGION\\Downloads\\ExamenArchivoFinal\\Examen\\Examen.csproj",
         "projectName": "Examen",
-        "projectPath": "C:\\Users\\LEGION\\Downloads\\Examen\\Examen.csproj",
+        "projectPath": "C:\\Users\\LEGION\\Downloads\\ExamenArchivoFinal\\Examen\\Examen.csproj",
         "packagesPath": "C:\\Users\\LEGION\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\LEGION\\Downloads\\Examen\\obj\\",
+        "outputPath": "C:\\Users\\LEGION\\Downloads\\ExamenArchivoFinal\\Examen\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\LEGION\\AppData\\Roaming\\NuGet\\NuGet.Config",

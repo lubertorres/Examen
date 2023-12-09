@@ -6,14 +6,15 @@ namespace Examen.Interface
 {
     public interface ICustomerEntity
     {
-        public Task<List<CustomerEntity>> GetAllCustomers();
+        public Task<List<CustomerEntityGetAll>> GetAllCustomers();
+        public Task<List<CustomerEntityGetAll>> GetCustomerById(Guid customerId);
         public Task<bool> InsertarCustomer(CustomerEntityDto customerEntityDto);
         public Task<bool> EditarNombreCliente(Guid DocumentNumber, string nombre);
-        public  Task<bool> EditarApellidoCliente(Guid DocumentNumber, string apellido);
-        public  Task<bool> EditarEdadCliente(Guid DocumentNumber, int edad);
-        public  Task<bool> EditarPhoneCliente(Guid DocumentNumber, string num);
-        public  Task<bool> EditarEmailCliente(Guid DocumentNumber, string email);
-        public  Task<bool> EditarEstadoCliente(Guid DocumentNumber, bool estado);
+        public Task<bool> EditarApellidoCliente(Guid DocumentNumber, string apellido);
+        public Task<bool> EditarEdadCliente(Guid DocumentNumber, int edad);
+        public Task<bool> EditarPhoneCliente(Guid DocumentNumber, string num);
+        public Task<bool> EditarEmailCliente(Guid DocumentNumber, string email);
+        public Task<bool> EditarEstadoCliente(Guid DocumentNumber, bool estado);
 
 
     }
@@ -30,17 +31,69 @@ namespace Examen.Interface
         }
 
 
-        public async Task<List<CustomerEntity>> GetAllCustomers()
+        public async Task<List<CustomerEntityGetAll>> GetAllCustomers()
         {
             try
             {
-                var response = await _context.CustomerEntity.ToListAsync();
-                return response;
+                var customers = _context.CustomerEntity;
+
+                var customerInfoList = await customers.Select(customer => new CustomerEntityGetAll
+                {
+                    DocumentNumber = customer.DocumentNumber,
+                    Name = customer.Name,
+                    LastName = customer.LastName,
+                    Age = customer.Age,
+                    PhoneNumber = customer.PhoneNumber,
+                    Email = customer.Email,
+                    Estado = customer.Estado,
+                    DateC = customer.DateC
+                }).ToListAsync();
+
+                return customerInfoList;
             }
             catch (Exception)
             {
-                return new List<CustomerEntity>();
+                throw new Exception("Error");
             }
+
+        }
+
+
+
+
+        public async Task<List<CustomerEntityGetAll>> GetCustomerById(Guid customerId)
+        {
+            try
+            {
+                var customers = _context.CustomerEntity;
+
+                var customerInfoList = await customers
+                    .Where(customer => customer.DocumentNumber == customerId)
+                    .Select(customer => new CustomerEntityGetAll
+                    {
+                        DocumentNumber = customer.DocumentNumber,
+                        Name = customer.Name,
+                        LastName = customer.LastName,
+                        Age = customer.Age,
+                        PhoneNumber = customer.PhoneNumber,
+                        Email = customer.Email,
+                        Estado = customer.Estado,
+                        DateC = customer.DateC
+                    })
+                    .ToListAsync();
+                if (customerInfoList.Count >= 1)
+                {
+                    return customerInfoList;
+
+
+                }
+                throw new Exception("No hay resultados");
+            }
+            catch (Exception)
+            {
+                throw new Exception("Error");
+            }
+
 
         }
 
@@ -53,7 +106,7 @@ namespace Examen.Interface
 
                 var response = await _context.CustomerEntity.AddAsync(new CustomerEntity
                 {
-                       
+
                     DocumentNumber = Guid.NewGuid(),
                     Name = customerEntityDto.Name,
                     LastName = customerEntityDto.LastName,
@@ -89,7 +142,8 @@ namespace Examen.Interface
                     _context.SaveChanges();
                     return true;
                 }
-            }catch (Exception)
+            }
+            catch (Exception)
             {
                 return false;
             }

@@ -6,8 +6,8 @@ namespace Examen.Interface
 {
     public interface IMovies
     {
-        public Task<List<MovieEntity>> GetAllMovies();
-        public Task<List<MovieEntity>> FiltrarPorGenTerror(string genero);
+        public Task<List<MovieGetDto>> GetAllMovies();
+        public Task<List<MovieGetDto>> FiltrarPorGenTerror(string genero);
         public  Task<bool> InsertarPelicula(MovieDto movieDto);
         public Task<bool> EditarNombrePelicula(Guid movieId, string name);
         public Task<bool> EditarGeneroPelicula(Guid MovieId, string genero);
@@ -32,31 +32,68 @@ namespace Examen.Interface
 
         }
 
-        public async Task<List<MovieEntity>> GetAllMovies()
+        public async Task<List<MovieGetDto>> GetAllMovies()
         {
             try
             {
-                var response = await _context.MovieEntity.ToListAsync();
-                return response;
+                var customers = _context.MovieEntity;
+
+                var customerInfoList = await customers
+                    .Select(movie => new MovieGetDto
+                    {
+                        MovieId = movie.MovieId,
+                        Name = movie.Name,
+                        Genero = movie.Genero,
+                        AllowedAge = movie.AllowedAge,
+                        LengthMinutes = movie.LengthMinutes,
+                        DateB = movie.DateB
+                    })
+                    .ToListAsync();
+                if (customerInfoList.Count >= 1)
+                {
+                    return customerInfoList;
+
+
+                }
+                throw new Exception("No hay resultados");
             }
             catch (Exception)
             {
-                return new List<MovieEntity>();
+                throw;
             }
         }
 
 
-        public async Task<List<MovieEntity>> FiltrarPorGenTerror(string genero)
+        public async Task<List<MovieGetDto>> FiltrarPorGenTerror(string genero)
         {
             try
             {
 
-                var response = await _context.MovieEntity.Where(x => x.Genero == genero).ToListAsync();
-                return response;
+                var customers = _context.MovieEntity;
+
+                var customerInfoList = await customers
+                    .Where(x => x.Genero == genero)
+                    .Select(movie => new MovieGetDto
+                    {
+                        MovieId = movie.MovieId,
+                        Name = movie.Name,
+                        Genero = movie.Genero,
+                        AllowedAge = movie.AllowedAge,
+                        LengthMinutes = movie.LengthMinutes,
+                        DateB = movie.DateB
+                    })
+                    .ToListAsync();
+                if (customerInfoList.Count >= 1)
+                {
+                    return customerInfoList;
+
+
+                }
+                throw new Exception("No hay resultados");
             }
             catch (Exception)
             {
-                return new List<MovieEntity>();
+                throw;
             }
         }
 

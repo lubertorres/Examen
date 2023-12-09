@@ -7,8 +7,8 @@ namespace Examen.Interface
     public interface IBookinEntity
     {
         public Task<bool> InsertarBooking(BookingEntityDto bookingEntityDto);
-        public Task<List<BookingEntity>> ListarReservasTerror(DateTime fechaInicio, DateTime fechaFin, string genero);
-        public Task<List<BookingEntity>> GetAllReservasUser(Guid customerId);
+        public Task<List<BookingEntityGetDto>> ListarReservasTerror(DateTime fechaInicio, DateTime fechaFin, string genero);
+        public Task<List<BookingEntityGetDto>> GetAllReservasUser(Guid customerId);
         public Task<bool> InactivarReservaYButaca(Guid bookingId, int seatId);
 
         public Task<bool> EditarIdCliente(Guid bookingId, Guid DocumentNumber);
@@ -61,7 +61,7 @@ namespace Examen.Interface
 
 
 
-        public async Task<List<BookingEntity>> ListarReservasTerror(DateTime fechaInicio, DateTime fechaFin, string genero)
+        public async Task<List<BookingEntityGetDto>> ListarReservasTerror(DateTime fechaInicio, DateTime fechaFin, string genero)
         {
             try
             {
@@ -73,32 +73,59 @@ namespace Examen.Interface
                         join pelicula in context.MovieEntity on cartelera.MovieId equals pelicula.MovieId
                         where pelicula.Genero == genero &&
                               reserva.DateB >= fechaInicio && reserva.DateB <= fechaFin
-                        select reserva
+                        select new BookingEntityGetDto
+                        {
+                            BookingId = reserva.BookingId,
+                            DateB = reserva.DateB,
+                            CustomerId = reserva.CustomerId,
+                            SeatId = reserva.SeatId,
+                            BillboardId = reserva.BillboardId,
+                            Estado = reserva.Estado
+
+                        }
                     ).ToListAsync();
 
                     return reservas;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine($"Error al listar reservas: {ex.Message}");
                 throw;
             }
         }
 
 
 
-        public async Task<List<BookingEntity>> GetAllReservasUser(Guid customerId)
+        public async Task<List<BookingEntityGetDto>> GetAllReservasUser(Guid customerId)
         {
             try
             {
-                var response = await _context.BookingEntity.Where(x => x.CustomerId == customerId).ToListAsync();
-                return response;
+                var billboards = _context.BookingEntity;
+
+                var bilboardInfoList = await billboards
+                    .Where(billboard => billboard.CustomerId == customerId)
+                    .Select(billboard => new BookingEntityGetDto
+                {
+                    BookingId = billboard.BookingId,
+                    DateB = billboard.DateB,
+                    CustomerId = billboard.CustomerId,
+                    SeatId = billboard.SeatId,
+                    BillboardId = billboard.BillboardId,
+                    Estado = billboard.Estado
+
+                }).ToListAsync();
+
+                if (bilboardInfoList.Count >= 1)
+                {
+                    return bilboardInfoList;
+                }
+                throw new Exception("No hay resultados");
             }
             catch (Exception)
             {
-                return new List<BookingEntity>();
+                throw new Exception("No hay resultados");
             }
+
         }
 
 

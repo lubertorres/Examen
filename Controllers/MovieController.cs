@@ -32,7 +32,7 @@ namespace Examen.Controllers
             }
             catch (Exception)
             {
-                return BadRequest(new { ErrorMessage = "Error" });
+                throw new Exception("No hay registros");
             }
         }
 
@@ -48,7 +48,7 @@ namespace Examen.Controllers
             }
             catch (Exception)
             {
-                return BadRequest(new { ErrorMessage = "Error" });
+                return BadRequest(new { ErrorMessage = "No hay resultados" });
             }
         }
 

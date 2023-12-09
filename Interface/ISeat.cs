@@ -10,7 +10,7 @@ namespace Examen.Interface
         public Task<List<SeatEntity>> FiltrarSeatsEstado(bool estado);
         public Task<bool> EditarEstadoButaca(int seatId, bool estado);
         public Task<bool> InsertarButaca(SeatDto seatDto);
-        public Task<List<SeatEntity>> ButacasDisponiblesSala();
+        public Task<string> ButacasDisponiblesSala(Guid roomId);
 
 
 
@@ -77,7 +77,7 @@ namespace Examen.Interface
                     RowNumber = seatDto.RowNumber,
                     RoomId = seatDto.RoomId,
                     Estado = seatDto.Estado
-                    
+
                 });
 
                 await _context.SaveChangesAsync();
@@ -92,20 +92,65 @@ namespace Examen.Interface
 
 
 
-        public async Task<List<SeatEntity>> ButacasDisponiblesSala()
+        public async Task<string> ButacasDisponiblesSala(Guid roomId)
         {
-            using (var context = new BaseEntityContext())
+            try
             {
-                DateTime today = DateTime.Today;
+                var butacasDisponibles = await _context.RoomEntity
+                    .Where(room => room.RoomId == roomId)
+                    .Join(
+                        _context.SeatEntity,
+                        room => room.RoomId,
+                        seat => seat.RoomId,
+                        (room, seat) => new { Room = room, Seat = seat }
+                    )
+                    .GroupJoin(
+                        _context.BookingEntity,
+                        combined => combined.Seat.SeatId,
+                        booking => booking.SeatId,
+                        (combined, bookings) => new { combined.Room, combined.Seat, Bookings = bookings }
+                    )
+                    .SelectMany(
+                        combined => combined.Bookings.DefaultIfEmpty(),
+                        (combined, booking) => new { combined.Room, combined.Seat, Booking = booking }
+                    )
+                    .Where(combined => combined.Booking == null || combined.Booking.Estado != true)
+                    .CountAsync();
 
-                var availableSeats = await context.BillboardEntity
-                    .Where(b => b.DateB.Date == today)
-                    .SelectMany(b => b.Room.SeatEntity)
-                    .Where(s => s.Estado)
-                    .ToListAsync();
 
-                return availableSeats;
+
+                var butacasOcupadas = await _context.RoomEntity
+                    .Where(room => room.RoomId == roomId)
+                    .Join(
+                        _context.SeatEntity,
+                        room => room.RoomId,
+                        seat => seat.RoomId,
+                        (room, seat) => new { Room = room, Seat = seat }
+                    )
+                    .GroupJoin(
+                        _context.BookingEntity,
+                        combined => combined.Seat.SeatId,
+                        booking => booking.SeatId,
+                        (combined, bookings) => new { combined.Room, combined.Seat, Bookings = bookings }
+                    )
+                    .SelectMany(
+                        combined => combined.Bookings.DefaultIfEmpty(),
+                        (combined, booking) => new { combined.Room, combined.Seat, Booking = booking }
+                    )
+                    .Where(combined => combined.Booking != null && combined.Booking.Estado == true)
+                    .CountAsync();
+
+
+
+                return butacasDisponibles.ToString() + " Butaca(s) disponibles en la sala" + roomId.ToString() + 
+                    "Butacas Ocupadas: " + butacasOcupadas.ToString();
+            }
+            catch (Exception)
+            {
+                throw;
             }
         }
+
+
     }
 }

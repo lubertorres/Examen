@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "twR+ameK6oGLVVL55pNmjRxqHBIgiB/OgvUTDyXqhCrfWRzBfkxRNVYfWVIMW55FmpT41vtLE6JTnHl3VL+akg==",
+  "dgSpecHash": "lZB830yExe5NiGhlQNcAB7RCBIPaFsoYI4UjAZwSZicZL7jHDN4K4TAtYOtT54/joRHVyYJNuXIq69Mqsrco0Q==",
   "success": true,
-  "projectFilePath": "C:\\Users\\LEGION\\Downloads\\Examen\\Examen.csproj",
+  "projectFilePath": "C:\\Users\\LEGION\\Downloads\\ExamenArchivoFinal\\Examen\\Examen.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\LEGION\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\LEGION\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
